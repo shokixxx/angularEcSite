@@ -1,0 +1,5 @@
+# Ignore all HTML,CSS,SCSS files;
+*.html
+*.css
+*.scss
+
