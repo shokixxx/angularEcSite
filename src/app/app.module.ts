@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { MaterialModule } from './material/material.module';
 import { NgxTranslateModule } from './ngx-translate/ngx-translate.module';
-import { PagesModule } from './pages/services/pages.module';
+import { PagesModule } from './pages/pages.module';
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
