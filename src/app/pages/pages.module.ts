@@ -46,6 +46,8 @@ import {
   providers: [
     { provide: MatPaginatorIntl, useClass: MatPaginatorI18nService },
     FormattedNumberPipe,
+    FormattedCurrencyPipe,
+    FormattedNumberPipe,
     FormattedCurrencyPipe
   ],
   exports: [
