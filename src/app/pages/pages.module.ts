@@ -1,11 +1,15 @@
-import { NgxUpperCaseDirectiveModule } from 'ngx-upper-case-directive/src';
-import { CoreModule } from 'src/app/core/core.module';
+import { NgxUpperCaseDirectiveModule } from 'ngx-upper-case-directive';
 
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatPaginatorIntl } from '@angular/material/paginator';
 
+import { CoreModule } from '../core/core.module';
+import { FormattedCurrencyPipe } from '../core/pipes/formatted-currency.pipe';
+import { FormattedNumberPipe } from '../core/pipes/formatted-number.pipe';
+import { MatPaginatorI18nService } from '../core/services/mat-paginator-i18n.service';
 import { MaterialModule } from '../material/material.module';
 import { NgxTranslateModule } from '../ngx-translate/ngx-translate.module';
 import {
@@ -36,8 +40,13 @@ import {
     HttpClientModule,
     MaterialModule,
     NgxTranslateModule,
-    NgxUpperCaseDirectiveModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxUpperCaseDirectiveModule
+  ],
+  providers: [
+    { provide: MatPaginatorIntl, useClass: MatPaginatorI18nService },
+    FormattedNumberPipe,
+    FormattedCurrencyPipe
   ],
   exports: [
     SignInPageComponent,
