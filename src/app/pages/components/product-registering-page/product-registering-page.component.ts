@@ -21,6 +21,9 @@ import { UrlConst } from '../../constants/url-const';
 import { ProductDto } from '../../models/dtos/product-dto';
 import { AccountService } from '../../services/account.service';
 import { ProductService } from '../../services/product.service';
+import {
+    EndOfSaleEndOfSaleDateValidator
+} from '../../validators/end-of-sale-end-of-sale-date-validator';
 
 @Component({
   selector: 'app-product-registering-page',
@@ -61,19 +64,24 @@ export class ProductRegisteringPageComponent implements OnInit, AfterViewChecked
   productImage = new FormControl<string>(null);
   updateDate = new FormControl<Date>(null);
 
-  registeringForm = this.formBuilder.group({
-    productSeq: this.productSeq,
-    productCode: this.productCode,
-    productName: this.productName,
-    productGenre: this.productGenre,
-    productSizeStandard: this.productSizeStandard,
-    productColor: this.productColor,
-    productUnitPrice: this.productUnitPrice,
-    endOfSale: this.endOfSale,
-    endOfSaleDate: this.endOfSaleDate,
-    productImage: this.productImage,
-    updateDate: this.updateDate
-  });
+  registeringForm = this.formBuilder.group(
+    {
+      productSeq: this.productSeq,
+      productCode: this.productCode,
+      productName: this.productName,
+      productGenre: this.productGenre,
+      productSizeStandard: this.productSizeStandard,
+      productColor: this.productColor,
+      productUnitPrice: this.productUnitPrice,
+      endOfSale: this.endOfSale,
+      endOfSaleDate: this.endOfSaleDate,
+      productImage: this.productImage,
+      updateDate: this.updateDate
+    },
+    {
+      validators: EndOfSaleEndOfSaleDateValidator
+    }
+  );
 
   /** Locale, Currency */
   locale: string = this.accountService.getUser().userLocale;

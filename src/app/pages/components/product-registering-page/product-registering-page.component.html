@@ -6,6 +6,7 @@
     </div>
     <div class="registering-criteria-wrapper">
         <app-error-messaging></app-error-messaging>
+        <app-success-messaging></app-success-messaging>
       <div class="registering-criteria">
         <form [formGroup]="registeringForm">
           <div class="registering-area-wrapper left">
@@ -69,9 +70,11 @@
             <div class="registering-condition-wrapper">
                 <mat-form-field class="form-field">
                     <input id="product-unit-price" matInput type="text"
+                    appFormattedCurrencyInput
                       formControlName="productUnitPrice"
                       placeholder="{{ 'productRegisteringPage.productUnitPrice' | translate }}"
-                      matTooltip="{{ 'tooltip.registerValue.input.numeric' | translate }}" maxlength=11>
+                      matTooltip="{{ 'tooltip.registerValue.input.numeric' | translate }}" maxlength=11 
+                      [attr.locale]="locale" [attr.currency]="currency">
                     <mat-error class="validation-error" *ngIf="productUnitPrice.hasError('required')">
                       {{'validationError.required'|translate}}
                     </mat-error>

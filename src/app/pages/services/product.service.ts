@@ -1,5 +1,6 @@
 import { catchError, map, Observable, of } from 'rxjs';
 import { ErrorMessagingService } from 'src/app/core/services/error-messaging.service';
+import { SuccessMessagingService } from 'src/app/core/services/success-messaging.service';
 
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -14,7 +15,11 @@ import {
   providedIn: 'root'
 })
 export class ProductService {
-  constructor(private http: HttpClient, private errorMessageService: ErrorMessagingService) {}
+  constructor(
+    private http: HttpClient,
+    private successMessagingService: SuccessMessagingService,
+    private errorMessageService: ErrorMessagingService
+  ) {}
   /**
    * Gets product list
    * @param httpParams search params
@@ -60,7 +65,7 @@ export class ProductService {
 
     return this.http.post<ProductDto>(webApiUrl, productDto).pipe(
       map((res) => {
-        //this.successMessagingService.setMessageProperty('successMessage.http');
+        this.successMessagingService.setMessageProperty('successMessage.http');
         return res;
       }),
       catchError((error) => {
@@ -81,7 +86,7 @@ export class ProductService {
 
     return this.http.put<ProductDto>(webApiUrl, productDto).pipe(
       map((res) => {
-        //this.successMessagingService.setMessageProperty('successMessage.http');
+        this.successMessagingService.setMessageProperty('successMessage.http');
         return res;
       }),
       catchError((error) => {
@@ -110,6 +115,7 @@ export class ProductService {
   // private methods
   // --------------------------------------------------------------------------------
   private clearMessageProperty() {
+    this.successMessagingService.clearMessageProperty();
     this.errorMessageService.clearMessageProperty();
   }
 }
