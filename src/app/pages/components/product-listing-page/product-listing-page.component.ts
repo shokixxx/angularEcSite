@@ -4,7 +4,7 @@ import { RoutingService } from 'src/app/core/services/routing.service';
 import { TitleI18Service } from 'src/app/shared/services/title-i18.service';
 
 import { HttpParams } from '@angular/common/http';
-import { AfterViewChecked, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { TranslateService } from '@ngx-translate/core';
@@ -16,19 +16,21 @@ import {
 import { ProductSearchResponseDto } from '../../models/dtos/responses/product-search-response-dto';
 import { AccountService } from '../../services/account.service';
 import { ProductService } from '../../services/product.service';
+import { SearchParamsService } from '../../services/search-params.service';
 
 @Component({
   selector: 'app-product-listing-page',
   templateUrl: './product-listing-page.component.html',
   styleUrls: ['./product-listing-page.component.scss']
 })
-export class ProductListingPageComponent implements OnInit, AfterViewChecked {
+export class ProductListingPageComponent implements OnInit, AfterViewChecked, AfterViewInit {
   constructor(
     private accountService: AccountService,
     private formBuilder: FormBuilder,
     private loadingService: LoadingService,
     private productService: ProductService,
     private routingService: RoutingService,
+    private searchParamsService: SearchParamsService,
     private titleI18Service: TitleI18Service,
     public translateService: TranslateService
   ) {}
@@ -91,9 +93,17 @@ export class ProductListingPageComponent implements OnInit, AfterViewChecked {
   }
 
   /**
+   * after view init
+   */
+  ngAfterViewInit(): void {
+    this.setupSearchConditions();
+  }
+
+  /**
    * Clicks new button
    */
   clickNewButton(): void {
+    this.searchParamsService.removeProductListingSearchParamsDto();
     this.routingService.navigate(UrlConst.PATH_PRODUCT_REGISTERING_NEW);
   }
 
@@ -101,6 +111,7 @@ export class ProductListingPageComponent implements OnInit, AfterViewChecked {
    * Clicks clear button
    */
   clickClearButton(): void {
+    this.searchParamsService.removeProductListingSearchParamsDto();
     this.clearSearchConditions();
     this.clearSearchResultList();
   }
@@ -115,7 +126,7 @@ export class ProductListingPageComponent implements OnInit, AfterViewChecked {
         switchMap(() => {
           this.loadingService.startLoading();
           const productListingSearchParamsDto: ProductListingSearchParamsDto = this.createSearchParamsDto();
-
+          this.searchParamsService.setProductListingSearchParamsDto(productListingSearchParamsDto);
           return this.productService.getProductList(this.createHttpParams(productListingSearchParamsDto));
         }),
         map((data) => {
@@ -188,5 +199,26 @@ export class ProductListingPageComponent implements OnInit, AfterViewChecked {
     const lang = this.accountService.getUser().userLanguage;
     this.translateService.setDefaultLang(lang);
     this.translateService.use(lang);
+  }
+  private setupSearchConditions(): void {
+    // Gets past search conditions from searchParamsService.
+    const productListingSearchParamsDto = this.searchParamsService.getProductListingSearchParamsDto();
+    // If the past search conditions can be acquired, the value is set on the screen.
+    if (productListingSearchParamsDto) {
+      if (productListingSearchParamsDto.productName) {
+        this.productName.setValue(productListingSearchParamsDto.productName);
+      }
+      if (productListingSearchParamsDto.productCode) {
+        this.productCode.setValue(productListingSearchParamsDto.productCode);
+      }
+      if (productListingSearchParamsDto.productGenre) {
+        this.productGenre.setValue(productListingSearchParamsDto.productGenre);
+      }
+      this.paginator.pageSize = productListingSearchParamsDto.pageSize;
+      this.paginator.pageIndex = productListingSearchParamsDto.pageIndex;
+      this.endOfSale.setValue(productListingSearchParamsDto.endOfSale);
+      // Displays in the searched state.
+      this.clickSearchButton();
+    }
   }
 }
